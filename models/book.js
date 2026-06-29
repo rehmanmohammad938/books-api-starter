@@ -1,6 +1,7 @@
 const { DataTypes } = require('sequelize');
 const dbConnection = require('../db')
-
+const DataTypes = require('sequelize')
+const db = require('./db')
 // TODO: Workshop Part 2: add one key per field below, each set to a DataTypes type
 // (and allowNull/defaultValue where noted). id is created automatically.
 //   title          STRING   required
