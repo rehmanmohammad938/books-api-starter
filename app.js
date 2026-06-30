@@ -5,7 +5,8 @@ const cors = require("cors");
 // TODO: Workshop Part 1: import your db connection from ./db once it's wired up.
 const db = require('./db')
 // TODO: Workshop Part 2: import your Book model from ./models/Book once it's defined.
-const BookModel = require('./models/book')
+const BookModel = require('./models/book');
+const Book = require("./models/book");
 const app = express();
 const PORT = 8080;
 
@@ -40,6 +41,7 @@ app.get("/", (request, response) => {
 // TODO: Workshop: swap `books` for the Book method that returns every row.
 app.get("/api/books", (request, response, next) => {
   try {
+    const books = await Book.findAll();
     response.json(books);
   } catch (error) {
     next(error);
@@ -49,40 +51,24 @@ app.get("/api/books", (request, response, next) => {
 // Part 4: GET one book by id
 // TODO: Workshop: swap `.find()` for the Book method that looks up by primary key.
 // It returns null when nothing matches — your 404 check below still applies.
-app.get("/api/books/:id", (request, response, next) => {
+app.get("/api/books/:id", async (request, response, next) => {
   try {
     const id = Number(request.params.id); // request.params.id is always a string — Number() makes it comparable
-    const book = books.find((b) => b.id === id);
+    const book = await Book.findByPk(id);
 
     if (!book) {
       return response.sendStatus(404);
     }
-
-    response.json(book);
-  } catch (error) {
-    next(error);
   }
 });
 
 // Part 5: POST a new book
 // TODO: Workshop: swap the manual id/push for the Book method that creates a row
 // directly from req.body. nextId goes away — the database assigns the id now.
-app.post("/api/books", (request, response, next) => {
+app.post("/api/books", async (request, response, next) => {
   try {
-    const { title, author, genre } = request.body;
-
-    const newBook = {
-      id: nextId,
-      title,
-      author,
-      genre,
-      available: true,
-    };
-    nextId++;
-
-    books.push(newBook);
-
-    response.status(201).json(newBook);
+    const book = await Book.create(request.body);
+    response.status(201).json(book);
   } catch (error) {
     next(error);
   }
