@@ -77,18 +77,17 @@ app.post("/api/books", async (request, response, next) => {
 // Part 6: PATCH an existing book — only changes the fields that were sent
 // TODO: Workshop: find the book the same Sequelize way as the GET-one route above,
 // then call the instance method that updates it in place with req.body.
-app.patch("/api/books/:id", (request, response, next) => {
+app.patch("/api/books/:id", async (request, response, next) => {
   try {
     const id = Number(request.params.id);
-    const book = books.find((b) => b.id === id);
+    const book = await Book.findByPk(id);
 
     if (!book) {
       return response.sendStatus(404);
     }
 
-    Object.assign(book, request.body);
-
-    response.status(200).json(book);
+    await book.update(request.body);
+    response.json(book);
   } catch (error) {
     next(error);
   }
@@ -97,17 +96,16 @@ app.patch("/api/books/:id", (request, response, next) => {
 // Part 7: DELETE a book
 // TODO: Workshop: find the book first, same as above, then call the instance
 // method that removes itself — no more findIndex/splice.
-app.delete("/api/books/:id", (request, response, next) => {
+app.delete("/api/books/:id", async (request, response, next) => {
   try {
     const id = Number(request.params.id);
-    const indexToDelete = books.findIndex((b) => b.id === id);
+    const book = await Book.findByPk(id);
 
-    if (indexToDelete === -1) {
+    if (!book) {
       return response.sendStatus(404);
     }
 
-    books.splice(indexToDelete, 1);
-
+    await book.destroy();
     response.sendStatus(204); // 204 No Content — no body on a successful delete
   } catch (error) {
     next(error);

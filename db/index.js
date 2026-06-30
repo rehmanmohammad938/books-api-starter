@@ -4,6 +4,9 @@ const { Sequelize } = require('sequelize')
 // books_api database, then export it. Same postgres:// connection string
 
 
-const dbConnection = new Sequelize("postgres://postgres:root@localhost:5432/books_api");
+const dbConnection = null;
+const dc = new Sequelize("postgres://postgres:root@localhost:5432/books_api", {
+    logging: false,
+});
 
-module.exports = dbConnection
+module.exports = db;
