@@ -5,7 +5,7 @@ const { Sequelize } = require('sequelize')
 
 
 const dbConnection = null;
-const dc = new Sequelize("postgres://postgres:root@localhost:5432/books_api", {
+const db = new Sequelize("postgres://postgres:root@localhost:5432/books_api", {
     logging: false,
 });
 

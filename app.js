@@ -39,7 +39,7 @@ app.get("/", (request, response) => {
 
 // Part 3: GET all books
 // TODO: Workshop: swap `books` for the Book method that returns every row.
-app.get("/api/books", (request, response, next) => {
+app.get("/api/books", async (request, response, next) => {
   try {
     const books = await Book.findAll();
     response.json(books);
@@ -59,6 +59,10 @@ app.get("/api/books/:id", async (request, response, next) => {
     if (!book) {
       return response.sendStatus(404);
     }
+
+    response.json(book);
+  } catch(error) {
+    next(error);
   }
 });
 
